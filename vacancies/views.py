@@ -35,4 +35,10 @@ class CategoryVacanciesView(View):
 
 class VacancyView(View):
     def get(self, request, vacancy_id):
-        return render(request, 'vacancy.html')
+        vacancy = Vacancy.objects.filter(id=vacancy_id)
+        if len(vacancy) == 0:
+            return HttpResponseNotFound('vacancy not found')
+        vacancy = vacancy[0]
+        return render(request, 'vacancy.html', context={
+            'vacancy': vacancy
+        })
