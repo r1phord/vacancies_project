@@ -8,7 +8,7 @@ for company in data.companies:
     Company.objects.create(name=company['name'],
                            location=company['location'],
                            description='some description',
-                           employee_count=randint(2, 1000))  # generate random count of employers
+                           employee_count=randint(2, 1000))  # generate random count of employers until real data
 
 for specialty in data.specialties:
     Specialty.objects.create(code=specialty['code'],
