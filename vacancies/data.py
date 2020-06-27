@@ -2,19 +2,19 @@
 
 jobs = [
 
-    {"title": "Разработчик на Python", "cat": "backend", "skills": "Python Git PostgreSQL",
+    {"title": "Разработчик на Python", "cat": "backend", "skills": "Python • Git • PostgreSQL",
      "company": "staffingsmarter", "salary_from": "100000",
      "salary_to": "150000", "posted": "2020-03-11", "desc": "Потом добавим"},
-    {"title": "Разработчик в проект на Django", "cat": "backend", "skills": "Python Django Git PostgreSQL",
+    {"title": "Разработчик в проект на Django", "cat": "backend", "skills": "Python • Django • Git • PostgreSQL",
      "company": "swiftattack", "salary_from": "80000",
      "salary_to": "90000", "posted": "2020-03-11", "desc": "Потом добавим"},
-    {"title": "Разработчик на Swift в аутсорс компанию", "cat": "backend", "skills": "Swift Objective-C Git",
+    {"title": "Разработчик на Swift в аутсорс компанию", "cat": "backend", "skills": "Swift • Objective-C • Git",
      "company": "swiftattack",
      "salary_from": "120000", "salary_to": "150000", "posted": "2020-03-11", "desc": "Потом добавим"},
-    {"title": "Мидл программист на Python", "cat": "backend", "skills": "Middle Python Git SQL", "company": "workiro",
+    {"title": "Мидл программист на Python", "cat": "backend", "skills": "Middle • Python • Git • SQL", "company": "workiro",
      "salary_from": "80000",
      "salary_to": "90000", "posted": "2020-03-11", "desc": "Потом добавим"},
-    {"title": "Питонист в стартап", "cat": "backend", "skills": "Python Flask Git", "company": "primalassault",
+    {"title": "Питонист в стартап", "cat": "backend", "skills": "Python • Flask • Git", "company": "primalassault",
      "salary_from": "120000",
      "salary_to": "150000", "posted": "2020-03-11", "desc": "Потом добавим"}
 

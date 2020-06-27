@@ -1,5 +1,8 @@
+from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.views import View
+
+from vacancies.models import Company, Vacancy
 
 
 class MainView(View):
@@ -9,7 +12,15 @@ class MainView(View):
 
 class CompanyView(View):
     def get(self, request, company_id):
-        return render(request, 'company.html')
+        company = Company.objects.filter(id=company_id)
+        if len(company) == 0:
+            return HttpResponseNotFound('company not found')
+        company = company[0]
+        company_vacancies = Vacancy.objects.filter(company=company)
+        return render(request, 'company.html', context={
+            'company': company,
+            'company_vacancies': company_vacancies
+        })
 
 
 class AllVacanciesView(View):
