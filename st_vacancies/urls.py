@@ -1,6 +1,11 @@
 from django.urls import path
 
-from vacancies.views import MainView, CompanyView, AllVacanciesView, VacancyView, SpecialtyVacanciesView
+from vacancies.views import MainView, CompanyView, AllVacanciesView, VacancyView, SpecialtyVacanciesView, \
+    custom_handler500, custom_handler404
+
+
+handler404 = custom_handler404
+handler500 = custom_handler500
 
 urlpatterns = [
     path('', MainView.as_view(), name='main'),

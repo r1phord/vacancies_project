@@ -1,8 +1,16 @@
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseServerError
 from django.shortcuts import render
 from django.views import View
 
 from vacancies.models import Company, Vacancy, Specialty
+
+
+def custom_handler404(request, exception):
+    return HttpResponseNotFound('Страница не найдена.')
+
+
+def custom_handler500(request):
+    return HttpResponseServerError('Ошибка сервера.')
 
 
 class MainView(View):
