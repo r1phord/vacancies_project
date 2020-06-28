@@ -1,8 +1,20 @@
 from random import randint
+import os
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'st_vacancies.settings')
+
+import django
+
+django.setup()
 
 from vacancies import data
 from vacancies.models import Company, Specialty, Vacancy
 
+# uncomment if need to clear database
+
+# Company.objects.all().delete()
+# Specialty.objects.all().delete()
+# Vacancy.objects.all().delete()
 
 for company in data.companies:
     Company.objects.create(name=company['name'],
@@ -16,8 +28,8 @@ for specialty in data.specialties:
 
 for job in data.jobs:
     Vacancy.objects.create(title=job['title'],
-                           specialty=Specialty.objects.get(code=job['cat']),
-                           company=Company.objects.get(name=job['company']),
+                           specialty=Specialty.objects.filter(code=job['cat'])[0],
+                           company=Company.objects.filter(name=job['company'])[0],
                            skills=job['skills'],
                            description=job['desc'],
                            salary_min=job['salary_from'],
