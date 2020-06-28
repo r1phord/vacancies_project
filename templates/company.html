@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>{{ company.name }} | Джуманджи</title>
+    <title>Вакансии компании {{ company.name }} | Джуманджи</title>
 {% endblock %}
 
 {% block content %}
     <main class="container mt-3">
         <div class="navbar mt-5">
-            <p><a href="#">Назад</a></p>
+            <p><a href="javascript:history.back()">Назад</a></p>
         </div>
         <section>
             <div class="text-center">
@@ -23,13 +23,13 @@
                             <div class="card-body px-4">
                                 <div class="row">
                                     <div class="col-12 col-md-8 col-lg-9">
-                                        <h2 class="h2 pb-2">{{ vacancy.title }}</h2>
+                                        <a href="{% url 'vacancy' vacancy.id %}"><h2 class="h2 pb-2">{{ vacancy.title }}</h2></a>
                                         <p class="mb-2">{{ vacancy.specialty.title }} • {{ vacancy.skills }}</p>
                                         <p>От {{ vacancy.salary_min }} до {{ vacancy.salary_max }} руб.</p>
                                         <p class="text-muted pt-1">{{ vacancy.published_at }}</p>
                                     </div>
                                     <div class="col-12 col-md-4 col-lg-3 d-flex align-items-end">
-                                        <img src="https://place-hold.it/130x80" width="130" height="80" alt="">
+                                        <img src="{{ company.logo }}" width="130" height="80" alt="">
                                     </div>
                                 </div>
                             </div>

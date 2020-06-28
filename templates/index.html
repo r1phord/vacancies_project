@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>Главная | Джуманджи</title>
+    <title>Главная | Джуманджи</title>
 {% endblock %}
 
 {% block content %}
@@ -62,7 +62,9 @@
                                 <img class="mx-auto d-block mw-100" src="{{ company.logo }}" alt="">
                             </a>
                             <div class="card-body">
-                                <p class="card-text"><a href="{% url 'company' company.id %}">{{ company.vacancies.count }} вакансий</a></p>
+                                <p class="card-text"><a
+                                        href="{% url 'company' company.id %}">{{ company.vacancies.count }} вакансий</a>
+                                </p>
                             </div>
                         </div>
                     </div>
