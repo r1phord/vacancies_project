@@ -1,11 +1,4 @@
 from random import randint
-import os
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'st_vacancies.settings')
-
-import django
-
-django.setup()
 
 from vacancies import data
 from vacancies.models import Company, Specialty, Vacancy
@@ -35,3 +28,13 @@ for job in data.jobs:
                            salary_min=job['salary_from'],
                            salary_max=job['salary_to'],
                            published_at=job['posted'])
+
+
+# Добавить в начало файла перед импортом моделей, если требуется запустить не черз shell
+# import os
+#
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'st_vacancies.settings')
+
+# import django
+
+# django.setup()
