@@ -15,8 +15,8 @@ def custom_handler500(request):
 
 class MainView(View):
     def get(self, request):
-        specialties = Specialty.objects.all()
-        companies = Company.objects.all()
+        specialties = Specialty.objects.all().prefetch_related('vacancies')
+        companies = Company.objects.all().prefetch_related('vacancies')
         return render(request, 'index.html', context={
             'specialties': specialties,
             'companies': companies
@@ -28,16 +28,16 @@ class CompanyView(View):
         if not Company.objects.filter(id=company_id).exists():
             return HttpResponseNotFound('company not found')
 
-        company = Company.objects.filter(id=company_id)[0]
+        company = Company.objects.filter(id=company_id).prefetch_related('vacancies')
 
         return render(request, 'company.html', context={
-            'company': company
+            'company': company[0]
         })
 
 
 class AllVacanciesView(View):
     def get(self, request):
-        vacancies = Vacancy.objects.all()
+        vacancies = Vacancy.objects.all().select_related('company', 'specialty')
         return render(request, 'vacancies.html', context={
             'title': 'Все вакансии',
             'vacancies': vacancies
@@ -50,7 +50,7 @@ class SpecialtyVacanciesView(View):
             return HttpResponseNotFound('no such specialty')
 
         spec = Specialty.objects.filter(code=specialty_code)[0]
-        vacancies = Vacancy.objects.filter(specialty=spec)
+        vacancies = Vacancy.objects.filter(specialty=spec).select_related('company')
 
         return render(request, 'vacancies.html', context={
             'title': spec.title,
@@ -63,8 +63,8 @@ class VacancyView(View):
         if not Vacancy.objects.filter(id=vacancy_id).exists():
             return HttpResponseNotFound('vacancy not found')
 
-        vacancy = Vacancy.objects.filter(id=vacancy_id)[0]
+        vacancy = Vacancy.objects.filter(id=vacancy_id).select_related('company', 'specialty')
 
         return render(request, 'vacancy.html', context={
-            'vacancy': vacancy
+            'vacancy': vacancy[0]
         })
