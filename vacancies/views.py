@@ -1,4 +1,4 @@
-from django.http import HttpResponseNotFound, HttpResponseServerError
+from django.http import HttpResponseNotFound, HttpResponseServerError, Http404
 from django.shortcuts import render
 from django.views import View
 
@@ -28,7 +28,7 @@ class CompanyView(View):
         try:
             company = Company.objects.get(id=company_id)
         except Company.DoesNotExist:
-            return HttpResponseNotFound('company not found')
+            raise Http404('company not found')
 
         vacancies = Vacancy.objects.filter(company=company).select_related('specialty')
         return render(request, 'company.html', context={
@@ -49,7 +49,7 @@ class AllVacanciesView(View):
 class SpecialtyVacanciesView(View):
     def get(self, request, specialty_code):
         if len(spec := Specialty.objects.filter(code=specialty_code)) == 0:
-            return HttpResponseNotFound('no such specialty')
+            raise Http404('no such specialty')
 
         spec = spec[0]
         vacancies = Vacancy.objects.filter(specialty=spec).select_related('company')
@@ -64,7 +64,7 @@ class SpecialtyVacanciesView(View):
 class VacancyView(View):
     def get(self, request, vacancy_id):
         if not Vacancy.objects.filter(id=vacancy_id).exists():
-            return HttpResponseNotFound('vacancy not found')
+            raise Http404('vacancy not found')
 
         vacancy = Vacancy.objects.filter(id=vacancy_id).select_related('company', 'specialty')
 
