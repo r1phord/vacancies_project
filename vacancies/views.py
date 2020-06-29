@@ -48,10 +48,10 @@ class AllVacanciesView(View):
 
 class SpecialtyVacanciesView(View):
     def get(self, request, specialty_code):
-        if not Specialty.objects.filter(code=specialty_code).exists():
+        if len(spec := Specialty.objects.filter(code=specialty_code)) == 0:
             return HttpResponseNotFound('no such specialty')
 
-        spec = Specialty.objects.filter(code=specialty_code)[0]
+        spec = spec[0]
         vacancies = Vacancy.objects.filter(specialty=spec).select_related('company')
 
         return render(request, 'vacancies.html', context={
