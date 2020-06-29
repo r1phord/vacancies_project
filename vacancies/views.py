@@ -54,6 +54,7 @@ class SpecialtyVacanciesView(View):
 
         return render(request, 'vacancies.html', context={
             'title': spec.title,
+            'spec': spec,
             'vacancies': vacancies
         })
 
