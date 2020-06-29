@@ -25,13 +25,15 @@ class MainView(View):
 
 class CompanyView(View):
     def get(self, request, company_id):
-        if not Company.objects.filter(id=company_id).exists():
+        try:
+            company = Company.objects.get(id=company_id)
+        except Company.DoesNotExist:
             return HttpResponseNotFound('company not found')
 
-        company = Company.objects.filter(id=company_id).prefetch_related('vacancies')
-
+        vacancies = Vacancy.objects.filter(company=company).select_related('specialty')
         return render(request, 'company.html', context={
-            'company': company[0]
+            'company': company,
+            'vacancies': vacancies
         })
 
 
