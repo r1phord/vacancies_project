@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
 from django.urls import path, include
 
 from vacancies.views import MainView, CompanyView, VacanciesView, VacancyView, SpecialtyVacanciesView, \
@@ -11,6 +12,7 @@ handler500 = custom_handler500
 
 urlpatterns = [
     path('', MainView.as_view(), name='main'),
+    path('admin/', admin.site.urls),
     path('vacancies/', VacanciesView.as_view(), name='vacancies'),
     path('vacancies/<int:vacancy_id>/', VacancyView.as_view(), name='vacancy'),
     path('vacancies/cat/<str:specialty_code>/', SpecialtyVacanciesView.as_view(), name='cat_vacancy'),
