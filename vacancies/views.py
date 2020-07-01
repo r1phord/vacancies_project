@@ -37,7 +37,7 @@ class CompanyView(View):
         })
 
 
-class AllVacanciesView(View):
+class VacanciesView(View):
     def get(self, request):
         vacancies = Vacancy.objects.all().select_related('company', 'specialty')
         return render(request, 'vacancies.html', context={
