@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from st_vacancies.settings import MEDIA_COMPANY_IMAGE_DIR
+from st_vacancies.settings import MEDIA_COMPANY_IMAGE_DIR, MEDIA_SPECIALITY_IMAGE_DIR
 
 
 class Company(models.Model):
@@ -12,11 +12,17 @@ class Company(models.Model):
     description = models.CharField(max_length=350)
     employee_count = models.PositiveIntegerField()
 
+    def __str__(self):
+        return self.name
+
 
 class Specialty(models.Model):
     code = models.CharField(max_length=25)
     title = models.CharField(max_length=25)
-    picture = models.ImageField(upload_to='MEDIA_SPECIALITY_IMAGE_DIR')
+    picture = models.ImageField(upload_to=MEDIA_SPECIALITY_IMAGE_DIR)
+
+    def __str__(self):
+        return self.title
 
 
 class Vacancy(models.Model):
@@ -29,6 +35,9 @@ class Vacancy(models.Model):
     salary_max = models.PositiveIntegerField()
     published_at = models.DateField()
 
+    def __str__(self):
+        return f'{self.title} in {self.company.name}'
+
 
 class Application(models.Model):
     written_username = models.CharField(max_length=20)
@@ -36,4 +45,7 @@ class Application(models.Model):
     written_cover_letter = models.TextField()
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, related_name='applications')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='applications')
+
+    def __str__(self):
+        return f'{self.written_username} application to {self.vacancy.title}'
 

@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from vacancies.models import Vacancy, Company, Application
+from vacancies.models import Vacancy, Company, Application, Specialty
+
+
+class SpecialtyAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Specialty, SpecialtyAdmin)
 
 
 class VacancyAdmin(admin.ModelAdmin):
