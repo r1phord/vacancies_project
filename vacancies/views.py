@@ -57,7 +57,7 @@ class SpecialtyVacanciesView(View):
         if len(spec := Specialty.objects.filter(code=specialty_code)) == 0:
             raise Http404('no such specialty')
 
-        spec = spec[0]
+        spec = spec.first()
         vacancies = Vacancy.objects.filter(specialty=spec).select_related('company')
 
         return render(request, 'vacancies.html', context={
