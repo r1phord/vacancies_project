@@ -48,6 +48,12 @@ class VacanciesView(View):
 
 class SpecialtyVacanciesView(View):
     def get(self, request, specialty_code):
+        # spec = Specialty.objects.filter(code=specialty_code)
+        # if len(spec) == 0:
+        #     raise Http404('no such specialty')
+        #
+        # spec = spec.first()
+
         if len(spec := Specialty.objects.filter(code=specialty_code)) == 0:
             raise Http404('no such specialty')
 
@@ -63,11 +69,12 @@ class SpecialtyVacanciesView(View):
 
 class VacancyView(View):
     def get(self, request, vacancy_id):
-        if not Vacancy.objects.filter(id=vacancy_id).exists():
-            raise Http404('vacancy not found')
+        vacancy = Vacancy.objects.filter(id=vacancy_id)
 
-        vacancy = Vacancy.objects.filter(id=vacancy_id).select_related('company', 'specialty')
+        if len(vacancy) == 0:
+            raise Http404('no such vacancy')
 
+        vacancy.select_related('company', 'specialty')
         return render(request, 'vacancy.html', context={
-            'vacancy': vacancy[0]
+            'vacancy': vacancy.first()
         })
