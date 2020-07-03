@@ -6,7 +6,6 @@ from django.urls import path, include
 from vacancies.views import MainView, CompanyView, VacanciesView, VacancyView, SpecialtyVacanciesView, \
     custom_handler500, custom_handler404
 
-
 handler404 = custom_handler404
 handler500 = custom_handler500
 
@@ -19,11 +18,10 @@ urlpatterns = [
     path('companies/<int:company_id>/', CompanyView.as_view(), name='company')
 ]
 
-
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns = [
+
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [
         path('__debug__/', include(debug_toolbar.urls)),
-    ] + urlpatterns
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root='settings.MEDIA_ROOT')
+    ]
