@@ -1,4 +1,5 @@
-from django.http import HttpResponseNotFound, HttpResponseServerError, Http404
+from django.contrib.auth import logout
+from django.http import HttpResponseNotFound, HttpResponseServerError, Http404, HttpResponse
 from django.shortcuts import render
 from django.views import View
 
@@ -78,3 +79,38 @@ class VacancyView(View):
         return render(request, 'vacancy.html', context={
             'vacancy': vacancy.first()
         })
+
+
+class SendApplicationView(View):
+    def get(self, request, vacancy_id):
+        return HttpResponse('send application')
+
+
+class MyCompanyView(View):
+    def get(self, request):
+        return HttpResponse('My company')
+
+
+class MyCompanyVacanciesView(View):
+    def get(self, request):
+        return HttpResponse('My company vacancies')
+
+
+class MyCompanyVacancyView(View):
+    def get(self, request, vacancies_id):
+        return HttpResponse('My company single vacancy')
+
+
+class LoginView(View):
+    def get(self, request):
+        return HttpResponse('LoginView')
+
+
+class RegisterView(View):
+    def get(self, request):
+        return HttpResponse('RegisterView')
+
+
+class LogoutView(View):
+    def get(self, request):
+        return HttpResponse('LogoutView')
