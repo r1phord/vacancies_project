@@ -83,32 +83,40 @@ class VacancyView(View):
 
 class SendApplicationView(View):
     def get(self, request, vacancy_id):
-        return HttpResponse('send application')
+        return render(request, 'sent.html', context={
+            'vacancy_id': vacancy_id
+        })
 
 
 class MyCompanyView(View):
     def get(self, request):
-        return HttpResponse('My company')
+        create = False
+        if create:
+            return render(request, 'company-create.html')
+        else:
+            return render(request, 'company-edit.html')
 
 
 class MyCompanyVacanciesView(View):
     def get(self, request):
-        return HttpResponse('My company vacancies')
+        return render(request, 'vacancy-list.html')
 
 
 class MyCompanyVacancyView(View):
     def get(self, request, vacancies_id):
-        return HttpResponse('My company single vacancy')
+        return render(request, 'vacancy-edit.html', context={
+            'vacancies_id': vacancies_id
+        })
 
 
 class LoginView(View):
     def get(self, request):
-        return HttpResponse('LoginView')
+        return render(request, 'login.html')
 
 
 class RegisterView(View):
     def get(self, request):
-        return HttpResponse('RegisterView')
+        return render(request, 'register.html')
 
 
 class LogoutView(View):
