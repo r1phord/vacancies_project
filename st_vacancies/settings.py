@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'debug_toolbar',
+    'crispy_forms',
     'vacancies.apps.VacanciesConfig',
 ]
 
