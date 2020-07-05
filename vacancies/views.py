@@ -1,9 +1,11 @@
 from django.contrib.auth import logout
-from django.http import HttpResponseNotFound, HttpResponseServerError, Http404, HttpResponse
+from django.contrib.auth.models import User
+from django.http import HttpResponseNotFound, HttpResponseServerError, Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 
-from vacancies.models import Company, Vacancy, Specialty
+from vacancies.forms import ApplicationForm
+from vacancies.models import Company, Vacancy, Specialty, Application
 
 
 def custom_handler404(request, exception):
@@ -69,15 +71,36 @@ class SpecialtyVacanciesView(View):
 
 
 class VacancyView(View):
-    def get(self, request, vacancy_id):
+    def get_vacancy(self, vacancy_id):
         vacancy = Vacancy.objects.filter(id=vacancy_id)
-
         if len(vacancy) == 0:
             raise Http404('no such vacancy')
 
         vacancy.select_related('company', 'specialty')
+        return vacancy
+
+    def get(self, request, vacancy_id):
+        vacancy = self.get_vacancy(vacancy_id).first()
+        application_form = ApplicationForm()
         return render(request, 'vacancy.html', context={
-            'vacancy': vacancy.first()
+            'vacancy': vacancy,
+            'form': application_form
+        })
+
+    def post(self, request, vacancy_id):
+        vacancy = self.get_vacancy(vacancy_id).first()
+        application_form = ApplicationForm(request.POST)
+        if application_form.is_valid():
+            data = application_form.cleaned_data
+            Application.objects.create(written_username=data['written_username'],
+                                       written_phone=data['written_phone'],
+                                       written_cover_letter=data['written_cover_letter'],
+                                       vacancy=vacancy,
+                                       user=User.objects.get(id=1))  # Заглушка. Поменять!
+            return HttpResponseRedirect(redirect_to='send')
+        return render(request, 'vacancy.html', context={
+            'vacancy': vacancy,
+            'form': application_form
         })
 
 
@@ -109,7 +132,7 @@ class MyCompanyVacancyView(View):
         })
 
 
-class LoginView(View):
+class MyLoginView(View):
     def get(self, request):
         return render(request, 'login.html')
 
@@ -117,6 +140,12 @@ class LoginView(View):
 class RegisterView(View):
     def get(self, request):
         return render(request, 'register.html')
+
+    def post(self, request):
+        data = request.POST
+        return HttpResponseRedirect('/')
+
+
 
 
 class LogoutView(View):
