@@ -1,10 +1,11 @@
-from django.contrib.auth import logout
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.http import HttpResponseNotFound, HttpResponseServerError, Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 
-from vacancies.forms import ApplicationForm
+from st_vacancies.settings import LOGIN_REDIRECT_URL
+from vacancies.forms import ApplicationForm, RegisterForm, LoginForm
 from vacancies.models import Company, Vacancy, Specialty, Application
 
 
@@ -136,16 +137,42 @@ class MyLoginView(View):
     def get(self, request):
         return render(request, 'login.html')
 
+    def post(self, request):
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            data = login_form.cleaned_data
+            user = authenticate(username=data['username'],
+                                password=data['password'])
+            if user:
+                if user.is_active:
+                    login(request, user)
+                    # return HttpResponse('success')
+                    return HttpResponseRedirect(LOGIN_REDIRECT_URL)
+                else:
+                    return HttpResponse('Disabled account')
+            else:
+                return HttpResponse('Invalid login')
+        return render(request, 'login.html', context={
+            'form': login_form
+        })
+
 
 class RegisterView(View):
     def get(self, request):
         return render(request, 'register.html')
 
     def post(self, request):
-        data = request.POST
-        return HttpResponseRedirect('/')
-
-
+        register_form = RegisterForm(request.POST)
+        if register_form.is_valid():
+            data = register_form.cleaned_data
+            User.objects.create_user(username=data['username'],
+                                     first_name=data['first_name'],
+                                     last_name=data['last_name'],
+                                     password=data['password'])
+            return HttpResponseRedirect('/')
+        return render(request, 'register.html', context={
+            'form': register_form
+        })
 
 
 class LogoutView(View):
