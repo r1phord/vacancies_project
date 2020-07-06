@@ -1,6 +1,6 @@
 from django import forms
 
-from vacancies.models import Application
+from vacancies.models import Application, Company
 
 
 class RegisterForm(forms.Form):
@@ -13,6 +13,12 @@ class RegisterForm(forms.Form):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField()
+
+
+class CompanyForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = ['name', 'location', 'description', 'employee_count']
 
 
 class ApplicationForm(forms.ModelForm):
