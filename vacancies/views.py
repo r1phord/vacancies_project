@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseNotFound, HttpResponseServerError, Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 
 from st_vacancies.settings import LOGIN_REDIRECT_URL
-from vacancies.forms import ApplicationForm, RegisterForm, LoginForm
+from vacancies.forms import ApplicationForm, RegisterForm, LoginForm, CompanyForm
 from vacancies.models import Company, Vacancy, Specialty, Application
 
 
@@ -114,11 +115,41 @@ class SendApplicationView(View):
 
 class MyCompanyView(View):
     def get(self, request):
-        create = False
-        if create:
-            return render(request, 'company-create.html')
+        user = request.user
+        company = Company.objects.filter(owner=user).first()
+        if company:
+            return render(request, 'company-edit.html', context={
+                'company': company
+            })
         else:
-            return render(request, 'company-edit.html')
+            return render(request, 'company-create.html')
+
+    def post(self, request):
+        company_form = CompanyForm(request.POST)
+        user = request.user
+        company = Company.objects.filter(owner=user).first()
+        success = False
+        if company_form.is_valid():
+            data = company_form.cleaned_data
+            if company:
+                company.name = data['name']
+                company.owner = user
+                company.location = data['location']
+                company.description = data['description']
+                company.employee_count = data['employee_count']
+                company.save()
+            else:
+                Company.objects.create(name=data['name'],
+                                       owner=user,
+                                       location=data['location'],
+                                       description=data['description'],
+                                       employee_count=data['employee_count'])
+            success = True
+        return render(request, 'company-edit.html', context={
+            'form': company_form,
+            'company': company,
+            'success': success
+        })
 
 
 class MyCompanyVacanciesView(View):
