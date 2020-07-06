@@ -204,8 +204,3 @@ class RegisterView(View):
         return render(request, 'register.html', context={
             'form': register_form
         })
-
-
-class LogoutView(View):
-    def get(self, request):
-        return HttpResponse('LogoutView')
