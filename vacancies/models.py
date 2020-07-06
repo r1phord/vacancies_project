@@ -8,7 +8,7 @@ class Company(models.Model):
     name = models.CharField(max_length=120)
     owner = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     location = models.CharField(max_length=50)
-    logo = models.ImageField(upload_to=MEDIA_COMPANY_IMAGE_DIR)
+    logo = models.ImageField(upload_to=MEDIA_COMPANY_IMAGE_DIR, default='100x60.jpg')
     description = models.CharField(max_length=350)
     employee_count = models.PositiveIntegerField()
 
