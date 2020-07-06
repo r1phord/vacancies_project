@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    {% block style %}
+    {% endblock %}
 </head>
 <body>
 <header class="container mt-3">
@@ -32,7 +34,7 @@
             <ul class="navbar-nav col-2 justify-content-end">
                 {% if user.is_authenticated %}
                     <div class="dropdown show">
-                        <a class="nav-link" href="#" role="button" id="dropdownMenuLink"
+                        <a class="nav-link active" href="#" role="button" id="dropdownMenuLink"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ user.first_name }} {{ user.last_name }}
                         </a>
@@ -40,8 +42,8 @@
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="#">Профиль</a>
                             <a class="dropdown-item" href="#">Резюме</a>
-                            <a class="dropdown-item" href="#">Компания</a>
-                            <a class="dropdown-item" href="#">Выйти</a>
+                            <a class="dropdown-item" href="{% url 'my company' %}">Компания</a>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Выйти</a>
                         </div>
                     </div>
                 {% else %}
