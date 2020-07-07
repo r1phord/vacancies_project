@@ -117,13 +117,16 @@ class MyCompanyView(View):
     def get(self, request):
         user = request.user
         company = Company.objects.filter(owner=user).first()
+        success = True
         if company:
             return render(request, 'company-edit.html', context={
                 'company': company,
-                'success': True
+                'success': success
             })
         else:
-            return render(request, 'company-create.html')
+            return render(request, 'company-create.html', context={
+                'success': success
+            })
 
     def post(self, request):
         company_form = CompanyForm(request.POST)
@@ -133,18 +136,11 @@ class MyCompanyView(View):
         if company_form.is_valid():
             data = company_form.cleaned_data
             if company:
-                company.name = data['name']
-                company.owner = user
-                company.location = data['location']
-                company.description = data['description']
-                company.employee_count = data['employee_count']
+                for attr, value in data.items():
+                    setattr(company, attr, value)
                 company.save()
             else:
-                Company.objects.create(name=data['name'],
-                                       owner=user,
-                                       location=data['location'],
-                                       description=data['description'],
-                                       employee_count=data['employee_count'])
+                Company.objects.create(owner=user, **data)
             success = True
         return render(request, 'company-edit.html', context={
             'form': company_form,
@@ -155,11 +151,21 @@ class MyCompanyView(View):
 
 class MyCompanyVacanciesView(View):
     def get(self, request):
-        return render(request, 'vacancy-list.html')
+        user = request.user
+        company = Company.objects.get(owner=user)
+        vacancies = Vacancy.objects.filter(company=company)  # .prefetch_related('applications')
+        return render(request, 'vacancy-list.html', context={
+            'vacancies': vacancies
+        })
 
 
 class MyCompanyVacancyView(View):
     def get(self, request, vacancies_id):
+        return render(request, 'vacancy-edit.html', context={
+            'vacancies_id': vacancies_id
+        })
+
+    def post(self, request, vacancies_id):
         return render(request, 'vacancy-edit.html', context={
             'vacancies_id': vacancies_id
         })
