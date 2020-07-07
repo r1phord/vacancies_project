@@ -119,7 +119,8 @@ class MyCompanyView(View):
         company = Company.objects.filter(owner=user).first()
         if company:
             return render(request, 'company-edit.html', context={
-                'company': company
+                'company': company,
+                'success': True
             })
         else:
             return render(request, 'company-create.html')
