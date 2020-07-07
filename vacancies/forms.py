@@ -24,7 +24,7 @@ class CompanyForm(forms.ModelForm):
 class VacancyForm(forms.ModelForm):
     class Meta:
         model = Vacancy
-        fields = ['title', 'specialty', 'skills', 'description', 'salary_min', 'salary_max']
+        fields = ['title', 'skills', 'specialty', 'description', 'salary_min', 'salary_max']
 
 
 class ApplicationForm(forms.ModelForm):
