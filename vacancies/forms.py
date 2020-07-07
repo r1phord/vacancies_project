@@ -1,6 +1,6 @@
 from django import forms
 
-from vacancies.models import Application, Company
+from vacancies.models import Application, Company, Vacancy
 
 
 class RegisterForm(forms.Form):
@@ -19,6 +19,12 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = ['name', 'location', 'description', 'employee_count']
+
+
+class VacancyForm(forms.ModelForm):
+    class Meta:
+        model = Vacancy
+        fields = ['title', 'specialty', 'skills', 'description', 'salary_min', 'salary_max']
 
 
 class ApplicationForm(forms.ModelForm):
