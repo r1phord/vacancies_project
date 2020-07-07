@@ -117,22 +117,17 @@ class MyCompanyView(View):
     def get(self, request):
         user = request.user
         company = Company.objects.filter(owner=user).first()
-        success = True
         if company:
             return render(request, 'company-edit.html', context={
                 'company': company,
-                'success': success
             })
         else:
-            return render(request, 'company-create.html', context={
-                'success': success
-            })
+            return render(request, 'company-create.html')
 
     def post(self, request):
         company_form = CompanyForm(request.POST)
         user = request.user
         company = Company.objects.filter(owner=user).first()
-        success = False
         if company_form.is_valid():
             data = company_form.cleaned_data
             if company:
@@ -141,11 +136,9 @@ class MyCompanyView(View):
                 company.save()
             else:
                 Company.objects.create(owner=user, **data)
-            success = True
         return render(request, 'company-edit.html', context={
             'form': company_form,
             'company': company,
-            'success': success
         })
 
 
