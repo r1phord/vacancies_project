@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -6,7 +8,7 @@ from django.shortcuts import render
 from django.views import View
 
 from st_vacancies.settings import LOGIN_REDIRECT_URL
-from vacancies.forms import ApplicationForm, RegisterForm, LoginForm, CompanyForm
+from vacancies.forms import ApplicationForm, RegisterForm, LoginForm, CompanyForm, VacancyForm
 from vacancies.models import Company, Vacancy, Specialty, Application
 
 
@@ -94,12 +96,12 @@ class VacancyView(View):
         application_form = ApplicationForm(request.POST)
         if application_form.is_valid():
             data = application_form.cleaned_data
-            Application.objects.create(written_username=data['written_username'],
-                                       written_phone=data['written_phone'],
-                                       written_cover_letter=data['written_cover_letter'],
-                                       vacancy=vacancy,
-                                       user=User.objects.get(id=1))  # Заглушка. Поменять!
+            Application.objects.create(vacancy=vacancy,
+                                       user=request.user,
+                                       **data)
+
             return HttpResponseRedirect(redirect_to='send')
+
         return render(request, 'vacancy.html', context={
             'vacancy': vacancy,
             'form': application_form
@@ -136,6 +138,10 @@ class MyCompanyView(View):
                 company.save()
             else:
                 Company.objects.create(owner=user, **data)
+            return render(request, 'company-edit.html', context={
+                'company': company
+            })
+
         return render(request, 'company-edit.html', context={
             'form': company_form,
             'company': company,
@@ -146,7 +152,7 @@ class MyCompanyVacanciesView(View):
     def get(self, request):
         user = request.user
         company = Company.objects.get(owner=user)
-        vacancies = Vacancy.objects.filter(company=company)  # .prefetch_related('applications')
+        vacancies = Vacancy.objects.filter(company=company).prefetch_related('applications')
         return render(request, 'vacancy-list.html', context={
             'vacancies': vacancies
         })
@@ -154,13 +160,39 @@ class MyCompanyVacanciesView(View):
 
 class MyCompanyVacancyView(View):
     def get(self, request, vacancies_id):
+        vacancy = Vacancy.objects.get(id=vacancies_id)
+        specialties = Specialty.objects.all()
+        vacancy_applications = Application.objects.filter(vacancy=vacancy)
         return render(request, 'vacancy-edit.html', context={
-            'vacancies_id': vacancies_id
+            'vacancy': vacancy,
+            'specialties': specialties,
+            'applications': vacancy_applications
         })
 
     def post(self, request, vacancies_id):
+        user = request.user
+        vacancy_form = VacancyForm(request.POST)
+        vacancy = Vacancy.objects.filter(id=vacancies_id).first()
+        specialties = Specialty.objects.all()
+        if vacancy_form.is_valid():
+            data = vacancy_form.cleaned_data
+            if vacancy:
+                for attr, value in data.items():
+                    setattr(vacancy, attr, value)
+                vacancy.save()
+            else:
+                company = Company.objects.get(owner=user)
+                vacancy = Vacancy.objects.create(company=company,
+                                                 published_at=datetime.today().strftime("%Y-%m-%d"),
+                                                 **data)
+            return render(request, 'vacancy-edit.html', context={
+                'vacancy': vacancy,
+                'specialties': specialties
+            })
         return render(request, 'vacancy-edit.html', context={
-            'vacancies_id': vacancies_id
+            'form': vacancy_form,
+            'vacancy': vacancy,
+            'specialties': specialties
         })
 
 
