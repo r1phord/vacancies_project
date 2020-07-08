@@ -32,13 +32,6 @@
                             <p class="alert alert-info" role="alert">
                                 Информация о компании обновлена
                             </p>
-{#                            {% if success %}#}
-{#                                <p class="alert alert-info" role="alert">#}
-{#                                    Информация о компании обновлена#}
-{#                                </p>#}
-{#                            {% else %}#}
-{#                                {{ form.errors }}#}
-{#                            {% endif %}#}
                             <form method="post">
                                 {% csrf_token %}
                                 <div class="row">
