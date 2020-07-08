@@ -48,4 +48,3 @@ class Application(models.Model):
 
     def __str__(self):
         return f'{self.written_username} application to {self.vacancy.title}'
-

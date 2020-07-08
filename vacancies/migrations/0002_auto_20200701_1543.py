@@ -16,7 +16,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='company',
             name='owner',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE,
+                                       to=settings.AUTH_USER_MODEL),
         ),
         migrations.CreateModel(
             name='Application',
@@ -25,8 +26,10 @@ class Migration(migrations.Migration):
                 ('written_username', models.CharField(max_length=20)),
                 ('written_phone', models.CharField(max_length=20)),
                 ('written_cover_letter', models.TextField()),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='applications', to=settings.AUTH_USER_MODEL)),
-                ('vacancy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='applications', to='vacancies.Vacancy')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='applications',
+                                           to=settings.AUTH_USER_MODEL)),
+                ('vacancy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='applications',
+                                              to='vacancies.Vacancy')),
             ],
         ),
     ]
